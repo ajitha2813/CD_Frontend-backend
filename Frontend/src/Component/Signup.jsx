@@ -1,14 +1,13 @@
 
 import { Link } from "react-router-dom";
 import axios from 'axios';
-
+import { jwtDecode} from "jwt-decode"
 import { useNavigate } from "react-router-dom";
-
 import "./Signup.css"
 import { useState } from "react";
 const Signup = () => {
   
-  const [change, setChange] = useState("signup")
+  const [change, setChange] = useState("login")
   const navigate = useNavigate()
   const [firstname, setFirstname] = useState("")
   const [email, setEmail] = useState("")
@@ -55,7 +54,16 @@ const Signup = () => {
         email: email,
         password: password
       })
+
+      const token=response.data.token
+      localStorage.setItem("authtoken",token)
+      const gettoken=localStorage.getItem("authtoken")
+      console.log(gettoken)
+      const decoded = jwtDecode(gettoken)
+      console.log('decode',decoded)
+      if(decoded.role === "admin"){
       navigate('/dashboard')
+      }
     }
 
     catch (err) {
